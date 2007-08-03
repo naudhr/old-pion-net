@@ -209,7 +209,7 @@ void HTTPRequestParser::readContentBytes(const boost::system::error_code& read_e
 	std::pair<HTTPTypes::Headers::const_iterator, HTTPTypes::Headers::const_iterator>
 		cookie_pair = m_http_request->getHeaders().equal_range(HTTPTypes::HEADER_COOKIE);
 	for (HTTPTypes::Headers::const_iterator cookie_iterator = cookie_pair.first;
-		 cookie_iterator != m_http_request->getCookieParams().end()
+		 cookie_iterator != m_http_request->getHeaders().end()
 		 && cookie_iterator != cookie_pair.second; ++cookie_iterator)
 	{
 		if (! parseCookieHeader(m_http_request->getCookieParams(),
@@ -594,7 +594,7 @@ bool HTTPRequestParser::parseCookieHeader(HTTPTypes::StringDictionary& dict,
 
 	// used to track what we are parsing
 	enum CookieParseState {
-		COOKIE_PARSE_NAME, COOKIE_PARSE_VALUE
+		COOKIE_PARSE_NAME, COOKIE_PARSE_VALUE, COOKIE_PARSE_IGNORE
 	} parse_state = COOKIE_PARSE_NAME;
 	
 	// misc other variables used for parsing
@@ -671,7 +671,7 @@ bool HTTPRequestParser::parseCookieHeader(HTTPTypes::StringDictionary& dict,
 						dict.insert( std::make_pair(cookie_name, cookie_value) );
 					cookie_name.erase();
 					cookie_value.erase();
-					parse_state = COOKIE_PARSE_NAME;
+					parse_state = COOKIE_PARSE_IGNORE;
 				} else if (cookie_value.size() >= COOKIE_VALUE_MAX) {
 					// max size exceeded
 					return false;
@@ -680,6 +680,12 @@ bool HTTPRequestParser::parseCookieHeader(HTTPTypes::StringDictionary& dict,
 					cookie_value.push_back(*string_iterator);
 				}
 			}
+			break;
+			
+		case COOKIE_PARSE_IGNORE:
+			// ignore everything until we reach a comma "," or semicolon ";"
+			if (*string_iterator == ';' || *string_iterator == ',')
+				parse_state = COOKIE_PARSE_NAME;
 			break;
 		}
 	}

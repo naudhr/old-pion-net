@@ -3,7 +3,7 @@
 # -----------------------------------
 
 # Set Pion version information
-AC_INIT([libpion], [0.2.2], [support@atomiclabs.com])
+AC_INIT([libpion], [0.2.3], [support@atomiclabs.com])
 PION_LIBRARY_VERSION=$PACKAGE_VERSION
 AC_SUBST(PION_LIBRARY_VERSION)
 AC_DEFINE_UNQUOTED([PION_VERSION],["$PACKAGE_VERSION"],[Define to the version number of libpion.])

@@ -12,7 +12,6 @@
 #ifdef PION_WIN32
 	// for Windows shutdown crash work-around
 	#include <boost/thread/xtime.hpp>
-	#include <ctime>
 #endif
 
 
@@ -87,7 +86,8 @@ void PionEngine::stop(const bool reset_servers)
 		// pause for 1 extra second to work-around shutdown crash on Windows
 		// which seems related to static objects used in the ASIO library
 		boost::xtime stop_time;
-		stop_time.sec = time(NULL) + 1;
+		boost::xtime_get(&stop_time, boost::TIME_UTC);
+		stop_time.sec++;
 		boost::thread::sleep(stop_time);
 #endif
 

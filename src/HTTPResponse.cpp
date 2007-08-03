@@ -85,10 +85,12 @@ void HTTPResponse::handleWrite(TCPConnectionPtr tcp_conn,
 	} else {
 		// response sent OK
 		PION_LOG_DEBUG(m_logger, "Sent HTTP response of " << bytes_written << " bytes ("
-					   << (tcp_conn->getKeepAlive() ? "keeping alive" : "closing") << ")");
+					   << (tcp_conn->getKeepAlive() ? "keeping alive)" : "closing)"));
 	}
 	
-	// all finished handling the connection
+	// TCPConnection::finish() calls TCPServer::finishConnection, which will either:
+	// a) call HTTPServer::handleConnection again if keep-alive is true; or,
+	// b) close the socket and remove it from the server's connection pool
 	tcp_conn->finish();
 }
 

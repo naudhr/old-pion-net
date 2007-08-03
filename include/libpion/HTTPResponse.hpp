@@ -62,24 +62,13 @@ public:
 	 * @param length the length, in bytes, of the binary data
 	 */
 	inline void write(const void *data, size_t length) {
-		flushContentStream();
-		m_content_buffers.push_back(m_binary_cache.add(data, length));
-		m_content_length += length;
+		if (length != 0) {
+			flushContentStream();
+			m_content_buffers.push_back(m_binary_cache.add(data, length));
+			m_content_length += length;
+		}
 	}
 	
-	/**
-	 * write text (non-binary) response content; the data written is not copied,
-	 * and therefore must persist until the response has finished sending
-	 *
-	 * @param data the data to append to the response content
-	 */
-	template <typename T>
-	inline void writeNoCopy(const T& data) {
-		flushContentStream();
-		std::string as_string(boost::lexical_cast<std::string>(data));
-		m_content_buffers.push_back(boost::asio::buffer(as_string));
-		m_content_length += as_string.size();
-	}
 
 	/**
 	 * write text (non-binary) response content; the data written is not
@@ -89,9 +78,11 @@ public:
 	 * @param data the data to append to the response content
 	 */
 	inline void writeNoCopy(const std::string& data) {
-		flushContentStream();
-		m_content_buffers.push_back(boost::asio::buffer(data));
-		m_content_length += data.size();
+		if (! data.empty()) {
+			flushContentStream();
+			m_content_buffers.push_back(boost::asio::buffer(data));
+			m_content_length += data.size();
+		}
 	}
 	
 	/**
@@ -102,9 +93,11 @@ public:
 	 * @param length the length, in bytes, of the binary data
 	 */
 	inline void writeNoCopy(void *data, size_t length) {
-		flushContentStream();
-		m_content_buffers.push_back(boost::asio::buffer(data, length));
-		m_content_length += length;
+		if (length > 0) {
+			flushContentStream();
+			m_content_buffers.push_back(boost::asio::buffer(data, length));
+			m_content_length += length;
+		}
 	}
 
 	/// adds an HTTP response header
@@ -258,10 +251,13 @@ private:
 	/// flushes any text data in the content stream after caching it in the TextCache
 	inline void flushContentStream(void) {
 		if (! m_stream_is_empty) {
-			m_text_cache.push_back(m_content_stream.str());
-			m_content_buffers.push_back(boost::asio::buffer(m_text_cache.back()));
-			m_content_length += m_text_cache.back().size();
-			m_content_stream.str("");
+			std::string string_to_add(m_content_stream.str());
+			if (! string_to_add.empty()) {
+				m_content_stream.str("");
+				m_content_length += string_to_add.size();
+				m_text_cache.push_back(string_to_add);
+				m_content_buffers.push_back(boost::asio::buffer(m_text_cache.back()));
+			}
 			m_stream_is_empty = true;
 		}
 	}

@@ -109,7 +109,10 @@ protected:
 	 * @param ptr points to the first byte read
 	 * @param len number of bytes available for parsing
 	 * 
-	 * @return boost::tribool result of parsing
+	 * @return boost::tribool result of parsing:
+	 *         false = request has an error,
+	 *         true = finished parsing request,
+	 *         intermediate = request is not yet finished
 	 */
 	boost::tribool parseRequestHeaders(const char *& ptr, const size_t len);
 

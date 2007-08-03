@@ -68,7 +68,15 @@ void HTTPServer::handleRequest(HTTPRequestPtr& http_request,
 			
 			// keep checking while the first part of the strings match
 			if (resource.compare(0, i->first.size(), i->first) != 0) {
-				// we've gone to far; the first part no longer matches
+				// the first part no longer matches
+				if (i != m_modules.begin()) {
+					// continue to next module in list if its size is < this one
+					ModuleMap::iterator j=i;
+					--j;
+					if (j->first.size() < i->first.size())
+						continue;
+				}
+				// otherwise we've reached the end; stop looking for a match
 				break;
 			}
 				

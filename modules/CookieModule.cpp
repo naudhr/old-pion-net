@@ -59,7 +59,7 @@ bool CookieModule::handleRequest(HTTPRequestPtr& request, TCPConnectionPtr& tcp_
 		std::pair<HTTPTypes::Headers::const_iterator, HTTPTypes::Headers::const_iterator>
 			header_pair = request->getHeaders().equal_range(HTTPTypes::HEADER_COOKIE);
 		for (HTTPTypes::Headers::const_iterator header_iterator = header_pair.first;
-			 header_iterator != request->getCookieParams().end()
+			 header_iterator != request->getHeaders().end()
 			 && header_iterator != header_pair.second; ++header_iterator)
 		{
 			response << "<li>Cookie: " << header_iterator->second << "\n";
