@@ -1,12 +1,1 @@
-Things to do:
-=============
-
-* Try to fix bug causing Windows shutdown crash versus using work-around
-* Help get at least one of the logging frameworks working in Windows
-* Add support for Sun Studio & Microsoft Visual C++ compilers
-* Use read-write mutex for HTTPServer modules?
-* Compare performance of using multiple io_services versus just one
-* Allow more options for binding servers than just port numbers (IP)
-* Add support for parsing multipart form content?
-* Add support for built-in authentication (Basic-Auth/OpenID)?
-* Switch to Jam or CMake build system instead of autotools?
+See http://trac.atomiclabs.com/libpion
