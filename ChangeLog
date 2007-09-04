@@ -1,9 +1,11 @@
-Version 0.2.4 (2007-08-xx)
+Version 0.2.4 (2007-09-xx)
 ==========================
 
 * Fixed a bug in HTTPServer that caused it to not find some modules correctly   
 * Removed writeNoCopy(const T& data) function since only strings make sense
 * Updated cookie parser to ignore garbage after quoted values
+* Updated build scripts so that they find Boost libs build with GCC 4.1
+* Updated cygwin patches for Boost 1.34.1
 
 
 Version 0.2.2 (2007-06-26)
