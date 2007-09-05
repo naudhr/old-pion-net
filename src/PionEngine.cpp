@@ -75,8 +75,15 @@ void PionEngine::stop(const bool reset_servers)
 			PION_LOG_DEBUG(m_logger, "Waiting for threads to shutdown");
 
 			// wait until all threads in the pool have stopped
-			std::for_each(m_thread_pool.begin(), m_thread_pool.end(),
-						  boost::bind(&boost::thread::join, _1));
+
+			// make sure we do not call join() for the current thread,
+			// since this may yield "undefined behavior"
+			boost::thread current_thread;
+			for (PionThreadPool::iterator i = m_thread_pool.begin();
+				i != m_thread_pool.end(); ++i)
+			{
+				if (**i != current_thread) (*i)->join();
+			}
 
 			// clear the thread pool (also deletes thread objects)
 			m_thread_pool.clear();
