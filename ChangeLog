@@ -1,4 +1,4 @@
-Version 0.2.4 (2007-09-xx)
+Version 0.2.4 (2007-09-05)
 ==========================
 
 * Fixed a bug in HTTPServer that caused it to not find some modules correctly   
