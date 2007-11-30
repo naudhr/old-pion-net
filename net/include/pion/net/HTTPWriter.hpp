@@ -228,6 +228,9 @@ public:
 	/// returns the length of the payload content (in bytes)
 	inline size_t getContentLength(void) const { return m_content_length; }
 
+	/// sets whether or not the client supports chunked messages
+	inline void supportsChunkedMessages(bool b) { m_client_supports_chunks = b; }
+	
 	/// returns true if the client supports chunked messages
 	inline bool supportsChunkedMessages() const { return m_client_supports_chunks; }
 
