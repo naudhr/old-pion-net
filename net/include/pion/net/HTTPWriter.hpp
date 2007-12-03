@@ -307,7 +307,7 @@ private:
 	};
 	
 	/// used to cache text (non-binary) data included within the payload content
-	typedef std::vector<std::string>				TextCache;
+	typedef std::list<std::string>				TextCache;
 
 	
 	/// primary logging interface used by this class
