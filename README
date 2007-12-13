@@ -21,8 +21,8 @@ Detailed build instructions are available for all of the platforms supported
 by the Pion within the "common/doc" subdirectory (README.platform).  Please
 read these instructions first.
 
-Starting with 0.4.0, Pion REQUIRES the Boost C++ libraries (version 1.34.1
-or greater), and the Boost ASIO library (version 0.3.8 or greater). Please see
+Starting with 0.4.2, Pion REQUIRES the Boost C++ libraries (version 1.34.1
+or greater), and the Boost ASIO library (version 0.3.9 or greater). Please see
 the README.boost file within the "common/doc" subdirectory for instructions on
 how to download, build and install these libraries.
 
