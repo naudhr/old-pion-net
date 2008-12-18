@@ -1,4 +1,8 @@
-Version 1.0.6 (2008-10-20)
+Version 1.0.8 (2008-12-17)
+==========================
+* Various improvements to how docs are built/cleaned (379)
+
+Version 1.0.6 (2008-11-20)
 ==========================
 * Pruning orphaned connections (346)
 * Fixing auto generated INSTALL file (347)

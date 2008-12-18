@@ -3,7 +3,7 @@
 # ------------------------------------------------
 
 # Set Pion version information
-AC_INIT([pion-net], [1.0.7], [support@atomiclabs.com])
+AC_INIT([pion-net], [1.0.8], [support@atomiclabs.com])
 
 # Initialize some other things
 AC_PREREQ([2.59])
@@ -21,7 +21,7 @@ AC_PROG_LIBTOOL
 # Setup doxygen support
 DX_DOXYGEN_FEATURE(ON)
 DX_HTML_FEATURE(ON)
-DX_INIT_DOXYGEN(pion-net, net/doc/Doxyfile, net/doc/html)
+DX_INIT_DOXYGEN(pion-net, net/doc/Doxyfile, net/doc)
 
 # Define CXXFLAGS before AC_PROG_CXX to suppress the default autoconf
 # compiler options

@@ -13,3 +13,7 @@ EXTRA_DIST = autogen.sh *.sln *.xcodeproj
 
 include common/build/doxygen.inc
 include net/build/net.inc
+
+all-local: docs
+
+clean-local: clean-docs
