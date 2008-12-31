@@ -876,6 +876,8 @@ void HTTPParser::finish(HTTPMessage& http_msg) const
 	switch (m_message_parse_state) {
 	case PARSE_START:
 		http_msg.setIsValid(false);
+		http_msg.setContentLength(0);
+		http_msg.createContentBuffer();
 		return;
 	case PARSE_END:
 		http_msg.setIsValid(true);
