@@ -67,6 +67,13 @@ public:
 	boost::tribool parse(HTTPMessage& http_msg);
 	
 	/**
+	 * finishes parsing an HTTP response message
+	 *
+	 * @param http_msg the HTTP message object to finish
+	 */
+	void finish(HTTPMessage& http_msg) const;
+		
+	/**
 	 * resets the location and size of the read buffer
 	 *
 	 * @param ptr pointer to the first bytes available to be read
@@ -284,13 +291,6 @@ protected:
 	 */
 	std::size_t consumeContentAsNextChunk(HTTPMessage::ChunkCache& chunk_buffers);
 
-	/**
-	 * finishes parsing an HTTP response message
-	 *
-	 * @param http_msg the HTTP message object to finish
-	 */
-	void finish(HTTPMessage& http_msg) const;
-	
 	// misc functions used by the parsing functions
 	inline static bool isChar(int c);
 	inline static bool isControl(int c);

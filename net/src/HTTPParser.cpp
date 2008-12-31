@@ -873,8 +873,31 @@ std::size_t HTTPParser::consumeContentAsNextChunk(HTTPMessage::ChunkCache& chunk
 
 void HTTPParser::finish(HTTPMessage& http_msg) const
 {
-	// mark the message as being valid
-	http_msg.setIsValid(true);
+	switch (m_message_parse_state) {
+	case PARSE_START:
+		http_msg.setIsValid(false);
+		return;
+	case PARSE_END:
+		http_msg.setIsValid(true);
+		break;
+	case PARSE_HEADERS:
+		http_msg.setIsValid(false);
+		http_msg.setContentLength(0);
+		http_msg.createContentBuffer();
+		break;
+	case PARSE_CONTENT:
+		http_msg.setIsValid(false);
+		http_msg.setContentLength(getContentBytesRead());
+		break;
+	case PARSE_CHUNKS:
+		http_msg.setIsValid(false);
+		http_msg.concatenateChunks();
+		break;
+	case PARSE_CONTENT_NO_LENGTH:
+		http_msg.setIsValid(true);
+		http_msg.concatenateChunks();
+		break;
+	}
 
 	if (isParsingRequest()) {
 
