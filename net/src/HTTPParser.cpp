@@ -102,6 +102,98 @@ boost::tribool HTTPParser::parse(HTTPMessage& http_msg)
 	return rc;
 }
 
+boost::tribool HTTPParser::parseMissingData(HTTPMessage& http_msg, std::size_t len)
+{
+	static const char MISSING_DATA_CHAR = 'X';
+	boost::tribool rc = boost::indeterminate;
+	
+	switch (m_message_parse_state) {
+	
+		// cannot recover from missing data while parsing HTTP headers
+		case PARSE_START:
+		case PARSE_HEADERS:
+			rc = false;
+			break;
+		
+		// parsing chunked payload content
+		case PARSE_CHUNKS:
+			// parsing chunk data -> we can only recover if data fits into current chunk
+			if (m_chunked_content_parse_state == PARSE_CHUNK
+				&& m_bytes_read_in_current_chunk < m_size_of_current_chunk
+				&& (m_size_of_current_chunk - m_bytes_read_in_current_chunk) >= len)
+			{
+				// use dummy content for missing data
+				for (std::size_t n = 0; n < len && http_msg.getChunkCache().size() < m_max_content_length; ++n) 
+					http_msg.getChunkCache().push_back(MISSING_DATA_CHAR);
+
+				m_bytes_read_in_current_chunk += len;
+				m_bytes_last_read = len;
+				m_bytes_total_read += len;
+				m_bytes_content_read += len;
+
+				if (m_bytes_read_in_current_chunk == m_size_of_current_chunk) {
+					m_chunked_content_parse_state = PARSE_EXPECTING_CR_AFTER_CHUNK;
+				}
+			} else {
+				// cannot recover from missing data
+				rc = false;
+			}
+			break;
+			
+		// parsing regular payload content with a known length
+		case PARSE_CONTENT:
+			// parsing content (with length) -> we can only recover if data fits into content
+			if (m_bytes_content_remaining == 0) {
+				// we have all of the remaining payload content
+				rc = true;
+			} else if (m_bytes_content_remaining < len) {
+				// cannot recover from missing data
+				rc = false;
+			} else {
+
+				// make sure content buffer is not already full
+				if ( (m_bytes_content_read+len) <= m_max_content_length) {
+					// use dummy content for missing data
+					for (std::size_t n = 0; n < len; ++n)
+						http_msg.getContent()[m_bytes_content_read++] = MISSING_DATA_CHAR;
+				} else {
+					m_bytes_content_read += len;
+				}
+
+				m_bytes_content_remaining -= len;
+				m_bytes_total_read += len;
+				m_bytes_last_read = len;
+				
+				if (m_bytes_content_remaining == 0)
+					rc = true;
+			}
+			break;
+			
+		// parsing payload content with no length (until EOF)
+		case PARSE_CONTENT_NO_LENGTH:
+			// use dummy content for missing data
+			for (std::size_t n = 0; n < len && http_msg.getChunkCache().size() < m_max_content_length; ++n) 
+				http_msg.getChunkCache().push_back(MISSING_DATA_CHAR);
+			m_bytes_last_read = len;
+			m_bytes_total_read += len;
+			m_bytes_content_read += len;
+			break;
+
+		// finished parsing the HTTP message
+		case PARSE_END:
+			rc = true;
+			break;
+	}
+	
+	// check if we've finished parsing the HTTP message
+	if (rc == true) {
+		m_message_parse_state = PARSE_END;
+		finish(http_msg);
+	}
+	
+	return rc;
+}
+
 boost::tribool HTTPParser::parseHeaders(HTTPMessage& http_msg)
 {
 	//
