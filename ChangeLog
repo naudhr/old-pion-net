@@ -1,12 +1,22 @@
+Version 1.0.10 (2009-01-22)
+===========================
+* Added support and unit tests for maximum HTTP payload content sizes (399)
+* Updated HTTPParser to recover from missing packets and other errors (407)
+* TCPServer can now bind to privileged ports when running as setuid (522)
+* Fixed occasional crashes in pion-net unit tests on multi-core systems (528)
+
+
 Version 1.0.8 (2008-12-17)
 ==========================
 * Various improvements to how docs are built/cleaned (379)
+
 
 Version 1.0.6 (2008-11-20)
 ==========================
 * Pruning orphaned connections (346)
 * Fixing auto generated INSTALL file (347)
 * Autoconf fixes (347)
+
 
 Version 1.0.4 (2008-10-16)
 ==========================
@@ -15,12 +25,14 @@ Version 1.0.4 (2008-10-16)
 * Added HEADER_X_FORWARDED_FOR to HTTPTypes (318)
 * Added TCPConnection::connect() function that performs dns lookups (318)
 
+
 Version 1.0.0 (2008-09-12)
 ==========================
 
 * QueryService added, then removed, and placed into pion::platform
 * Update clear() function to clear all members()
 * Added test to see if base64 routines handle binary data in strings properly
+
 
 Version 0.6.0 (2008-08-29)
 ==========================
