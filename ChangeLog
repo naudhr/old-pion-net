@@ -1,3 +1,8 @@
+Version 1.0.12 (2009-02-10)
+===========================
+* No changes (version incremented for pion-platform)
+
+
 Version 1.0.10 (2009-01-22)
 ===========================
 * Added support and unit tests for maximum HTTP payload content sizes (399)
