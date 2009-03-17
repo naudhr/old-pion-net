@@ -529,14 +529,8 @@ boost::tribool HTTPParser::parseHeaders(HTTPMessage& http_msg)
 	return boost::indeterminate;
 }
 
-boost::tribool HTTPParser::finishHeaderParsing(HTTPMessage& http_msg)
+void HTTPParser::updateMessageWithHeaderData(HTTPMessage& http_msg) const
 {
-	boost::tribool rc = boost::indeterminate;
-	
-	m_bytes_content_remaining = m_bytes_content_read = 0;
-	http_msg.setContentLength(0);
-	http_msg.updateTransferCodingUsingHeader();
-
 	if (isParsingRequest()) {
 
 		// finish an HTTP request message
@@ -575,7 +569,16 @@ boost::tribool HTTPParser::finishHeaderParsing(HTTPMessage& http_msg)
 		http_response.setStatusCode(m_status_code);
 		http_response.setStatusMessage(m_status_message);
 	}
+}
 
+boost::tribool HTTPParser::finishHeaderParsing(HTTPMessage& http_msg)
+{
+	boost::tribool rc = boost::indeterminate;
+	
+	m_bytes_content_remaining = m_bytes_content_read = 0;
+	http_msg.setContentLength(0);
+	http_msg.updateTransferCodingUsingHeader();
+	updateMessageWithHeaderData(http_msg);
 
 	if (http_msg.isChunked()) {
 		
@@ -1016,6 +1019,7 @@ void HTTPParser::finish(HTTPMessage& http_msg) const
 		break;
 	case PARSE_HEADERS:
 		http_msg.setIsValid(false);
+		updateMessageWithHeaderData(http_msg);
 		http_msg.setContentLength(0);
 		http_msg.createContentBuffer();
 		break;
