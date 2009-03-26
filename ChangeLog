@@ -1,3 +1,9 @@
+Version 1.0.14 (2009-03-26)
+===========================
+* HTTPParser dropping requests when TCP connection contained 304 responses (481)
+* Updated PionLockedQueue so that it now always keeps track of the size (469)
+
+
 Version 1.0.12 (2009-02-10)
 ===========================
 * No changes (version incremented for pion-platform)
