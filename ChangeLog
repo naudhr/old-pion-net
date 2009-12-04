@@ -1,3 +1,10 @@
+Version 2.2.8 (2009-12-04)
+==========================
+
+* HTTP client library not sending payload content that started with NULL (777)
+* Added support for newer Boost releases (through 1.41) and for gcc 4.4 (780)
+
+
 Version 2.2.2 (2009-10-09)
 ==========================
 
