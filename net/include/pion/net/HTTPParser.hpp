@@ -499,7 +499,7 @@ inline bool HTTPParser::isHexDigit(int c)
 inline bool HTTPParser::isCookieAttribute(const std::string& name, bool set_cookie_header)
 {
 	return (name.empty() || name[0] == '$' || (set_cookie_header &&
-		(name=="Comment" || name=="Domain" || name=="Max-Age" || name=="Path" || name=="Secure" || name=="Version")
+		(name=="Comment" || name=="Domain" || name=="Max-Age" || name=="Path" || name=="Secure" || name=="Version" || name=="Expires")
 		) );
 }
 
