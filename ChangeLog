@@ -1,3 +1,10 @@
+Version 2.2.10 (2010-01-20)
+===========================
+
+* HTTPParser will now ignore attributes from Set-Cookie HTTP headers (808)
+* Disabled default building of static libraries in Unix autoconf scripts (825)
+
+
 Version 2.2.8 (2009-12-04)
 ==========================
 
