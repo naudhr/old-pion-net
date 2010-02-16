@@ -1,3 +1,9 @@
+Version 2.2.12 (2010-02-16)
+===========================
+
+* Made HTTP query parameter map case-insensitive (836)
+
+
 Version 2.2.10 (2010-01-20)
 ===========================
 
