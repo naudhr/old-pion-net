@@ -16,12 +16,7 @@
 namespace pion {	// begin namespace pion
 namespace net {		// begin namespace net (Pion Network Library)
 
-
-// HTTPReader static members
 	
-const boost::uint32_t		HTTPReader::DEFAULT_READ_TIMEOUT = 10;
-
-
 // HTTPReader member functions
 
 void HTTPReader::receive(void)
@@ -34,24 +29,13 @@ void HTTPReader::receive(void)
 	} else {
 		// no pipelined messages available in the read buffer -> read bytes from the socket
 		m_tcp_conn->setLifecycle(TCPConnection::LIFECYCLE_CLOSE);	// default to close the connection
-		readBytesWithTimeout();
+		readBytes();
 	}
 }
 
 void HTTPReader::consumeBytes(const boost::system::error_code& read_error,
 							  std::size_t bytes_read)
 {
-	// cancel read timer if operation didn't time-out
-	if (m_read_timeout > 0) {
-		boost::mutex::scoped_lock timer_lock(m_timer_mutex);
-		m_read_active = false;
-		if (m_timer_active) {
-			m_timer_stop.notify_all();
-			timer_lock.unlock();
-			m_timer_thread_ptr->join();
-		}
-	}
-
 	if (read_error) {
 		// a read error occured
 		handleReadError(read_error);
@@ -139,37 +123,9 @@ void HTTPReader::consumeBytes(void)
 		
 	} else {
 		// not yet finished parsing the message -> read more data
-		readBytesWithTimeout();
+		
+		readBytes();
 	}
-}
-
-void HTTPReader::readBytesWithTimeout(void)
-{
-	if (m_read_timeout > 0) {
-		boost::mutex::scoped_lock timer_lock(m_timer_mutex);
-		m_read_active = true;
-		m_timer_active = true;
-		m_timer_thread_ptr.reset(new boost::thread(boost::bind(&HTTPReader::runTimer, this)));
-	}
-	readBytes();
-}
-
-void HTTPReader::runTimer(void)
-{
-	boost::mutex::scoped_lock timer_lock(m_timer_mutex);
-	try {
-		if (m_read_active)
-			m_timer_stop.timed_wait(m_timer_mutex, boost::posix_time::seconds(m_read_timeout));
-		if (m_read_active) {
-			PION_LOG_DEBUG(m_logger, "Read operation timed-out, closing connection");
-			m_tcp_conn->close();
-		}
-	} catch (std::exception& e) {
-		PION_LOG_ERROR(m_logger, e.what());
-	} catch (...) {
-		PION_LOG_ERROR(m_logger, "caught unrecognized exception");
-	}
-	m_timer_active = false;
 }
 
 void HTTPReader::handleReadError(const boost::system::error_code& read_error)
