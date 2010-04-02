@@ -1,3 +1,9 @@
+Version 3.0.5 (2010-04-02)
+==========================
+
+* TCPonnection - add accessors for ssl socket object (901)
+
+
 Version 3.0.3 (2010-03-12)
 ==========================
 
