@@ -3,7 +3,7 @@
 # ------------------------------------------------
 
 # Set Pion version information
-AC_INIT([pion-net], [3.0.5], [support@atomiclabs.com])
+AC_INIT([pion-net], [3.0.6], [support@atomiclabs.com])
 
 # Initialize some other things
 AC_PREREQ([2.59])
