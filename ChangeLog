@@ -1,3 +1,10 @@
+Version 3.0.21 (2011-01-25)
+===========================
+
+* TCPTimer.cpp was missing boost/bind.hpp include file (1005)
+* TCPConnection - now allows for SSL state change (1024)
+* HTTPMessage - added headers_only options for send() and receive() (1025)
+
 
 Version 3.0.9 (2010-04-30)
 ==========================
